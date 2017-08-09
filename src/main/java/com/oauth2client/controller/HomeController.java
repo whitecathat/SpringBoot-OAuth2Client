@@ -19,15 +19,16 @@ import com.oauth2client.consts.ConfigConsts;
 
 @Controller
 public class HomeController {
-
+	
+	public String token = null;
 	@RequestMapping("/index")
-	public String index() {
+	public String index(Model model) {
+		model.addAttribute("token", token);
 		return "index";
 	}
 	
 	@RequestMapping("/callback")
-	public String callback(String code, Model model, HttpSession session) throws OAuthSystemException, OAuthProblemException {
-		String token = null;
+	public String callback(String code, HttpSession session) throws OAuthSystemException, OAuthProblemException {
 		if (!StringUtils.isEmpty(code)) {
 			OAuthClientRequest request = OAuthClientRequest
 	                .tokenLocation(ConfigConsts.REQUEST_ACCESSTOKEN_URI)
@@ -44,8 +45,6 @@ public class HomeController {
 	        token = oauthResponse.getAccessToken();
 		}
 		session.setAttribute("user", token);
-		System.out.println(token);
-		model.addAttribute("token", token);
-		return "main";
+		return "redirect:/index";
 	}
 }
