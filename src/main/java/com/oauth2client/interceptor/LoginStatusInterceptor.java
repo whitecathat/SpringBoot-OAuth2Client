@@ -16,15 +16,15 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.oauth2client.consts.ConfigConsts;
 
 @Configuration
-public class LoginFilter extends WebMvcConfigurerAdapter {
+public class LoginStatusInterceptor extends WebMvcConfigurerAdapter {
 
 	public final static String SESSION_KEY = "user";
-	
+
     @Bean
     public LoginInterceptor getSecurityInterceptor() {
         return new LoginInterceptor();
     }
-    
+
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration addInterceptor = registry.addInterceptor(getSecurityInterceptor());
 
@@ -32,7 +32,7 @@ public class LoginFilter extends WebMvcConfigurerAdapter {
 
         addInterceptor.addPathPatterns("/**");
     }
-    
+
     private class LoginInterceptor extends HandlerInterceptorAdapter {
 
         @Override
@@ -43,8 +43,8 @@ public class LoginFilter extends WebMvcConfigurerAdapter {
             	return true;
             }
 
-            String url = ConfigConsts.REQUEST_AUTHORIZE_URI + "?" 
-            				+ "client_id=" + ConfigConsts.CLIENT_ID 
+            String url = ConfigConsts.REQUEST_AUTHORIZE_URI + "?"
+            				+ "client_id=" + ConfigConsts.CLIENT_ID
             				+ "&redirect_uri=" + ConfigConsts.REDIRECT_URI
             				+ "&response_type=" + ResponseType.CODE.toString();
             System.out.println(url);
